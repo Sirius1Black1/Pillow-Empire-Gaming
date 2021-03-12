@@ -6,8 +6,8 @@ using UnityEngine;
 [RequireComponent(typeof(Camera))]
 public class CamControl : MonoBehaviour
 {
-    [SerializeField, Range(0f, 100f)]
-    float sensitivity = 50f;
+    [SerializeField, Range(0f, 2f)]
+    float sensitivity = 1f;
 
     [SerializeField, Range(0f, 1f)]
     float scrollSensitivity = 0.1f;
@@ -44,8 +44,8 @@ public class CamControl : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        var mouseX = Input.GetAxis("Mouse X") * sensitivity;
-        var mouseY = Input.GetAxis("Mouse Y") * sensitivity;
+        var mouseX = Mathf.Clamp(Input.GetAxis("Mouse X") * sensitivity, -distance, distance) ;
+        var mouseY = Mathf.Clamp(Input.GetAxis("Mouse Y") * sensitivity, -distance, distance) ;
         if (mouseX != 0 || mouseY != 0)
         {
             gameObject.transform.Translate(-mouseX, 0, 0, Space.Self);
@@ -98,40 +98,5 @@ public class CamControl : MonoBehaviour
 
     }
     
-
-
-/// <summary>
-/// depreciated, figured out unity has built in function
-/// </summary>
-/// <param name="updatedRotation"></param>
-/// <param name="updatedDistance"></param>
-/// <returns></returns>
-Vector3 CalculateNewPos(Quaternion updatedRotation, float updatedDistance)
-    {
-        //z rotation should always be 0
-        //coordinates derived from x,y rotation
-        //coordinates must be on the distance sphere
-        // ==> calculate a vector with correct rotation and distance as length
-        // [or] ==> conversion of spherical coordinates to cartesian
-
-        var rotX = updatedRotation.eulerAngles.x;
-        var rotY = updatedRotation.eulerAngles.y;
-
-        Vector3 rotVector = new Vector3( Mathf.Cos(rotY)*Mathf.Cos(rotX) , Mathf.Sin(rotX) , Mathf.Sin(rotY)*Mathf.Cos(rotX) );
-        Vector3 posVector = rotVector * updatedDistance;
-        
-        #region debug
-        if (debug)
-        {
-            Debug.Log("Cos(Y) = " + Mathf.Cos(rotY));
-            Debug.Log("Cos(X) = " + Mathf.Cos(rotX));
-            Debug.Log("Sin(Y) = " + Mathf.Sin(rotY));
-            Debug.Log("Sin(X) = " + Mathf.Sin(rotX));
-            Debug.Log("rotVector" + rotVector.ToString());
-            Debug.Log("posVector" + posVector.ToString());
-        }
-        #endregion
-        return posVector;
-    }
 
 }
