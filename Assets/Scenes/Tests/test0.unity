@@ -362,7 +362,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 341255259}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0.019999983, y: 1.196, z: -0.6870583}
+  m_LocalPosition: {x: 0.019999983, y: 1.196, z: -0.6870593}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 840155330}
@@ -1290,7 +1290,7 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 1
   volumeAnchorOverride: {fileID: 0}
-  antialiasing: 0
+  antialiasing: 1
   SMAAQuality: 2
   dithering: 0
   stopNaNs: 0
@@ -1734,7 +1734,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1384612198}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 2.5102348, y: 1.196, z: 1.1761175}
+  m_LocalPosition: {x: 2.5102386, y: 1.196, z: 1.1761194}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 840155330}
@@ -2492,7 +2492,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1efe450d56d9a5c45b44d76673eca735, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  controller: {fileID: 1552696662}
   cam: {fileID: 987062111}
   joystickDeadzone: 0
   speed: 5
@@ -2558,7 +2557,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1562708588}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0.019999983, y: 1.196, z: 1.810235}
+  m_LocalPosition: {x: 0.019999983, y: 1.196, z: 1.8102388}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 840155330}
