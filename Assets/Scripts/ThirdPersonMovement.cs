@@ -15,8 +15,13 @@ public class ThirdPersonMovement : MonoBehaviour
     public float runSpeed = 8f;
     public float sneakSpeed = 3f;
 
-    public float turnSpeed = 0.1f;
+    public float turnSpeed = 0.2f;
     float turnSmoothVelocity;
+
+    [SerializeField, Range(0f, 20f)]
+    public float gravity = 9.81f;
+    private float vSpeed = 0; // current vertical velocity
+    public float terminalVel = 100;
 
     // Start is called before the first frame update
     void Start()
@@ -28,13 +33,16 @@ public class ThirdPersonMovement : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        //get input direction
         Vector3 direction = new Vector3(Input.GetAxisRaw("Horizontal"), 0f, Input.GetAxisRaw("Vertical")).normalized;
-
-        float targAtangle = Mathf.Atan2(direction.x,direction.z) * Mathf.Rad2Deg + cam.eulerAngles.y;
-        float angle = Mathf.SmoothDampAngle(transform.eulerAngles.y, targAtangle, ref turnSmoothVelocity, turnSpeed);
+        //smooth rotation
+        float targetAngle = Mathf.Atan2(direction.x,direction.z) * Mathf.Rad2Deg + cam.eulerAngles.y;
+        float angle = Mathf.SmoothDampAngle(transform.eulerAngles.y, targetAngle, ref turnSmoothVelocity, turnSpeed);
+        //turn player to face in the movement direction
         transform.rotation = Quaternion.Euler(0f, angle, 0f);
-        Vector3 moveDir = Quaternion.Euler(0f, targAtangle, 0f) * Vector3.forward;
-            
+        //Vector along wich to move
+        Vector3 moveDir = Quaternion.Euler(0f, targetAngle, 0f) * Vector3.forward;
+        //Movement mode handling
         if (Input.GetKey(KeyCode.LeftShift))
         {
             controller.Move(moveDir.normalized * runSpeed * Time.deltaTime * direction.magnitude);
@@ -47,8 +55,18 @@ public class ThirdPersonMovement : MonoBehaviour
         {
             controller.Move(moveDir.normalized * speed * Time.deltaTime * direction.magnitude);
         }
-        
 
+        //gravity
+        if (controller.isGrounded)
+        {
+            // grounded character has vSpeed = 0
+            vSpeed = 0; 
+        }
+        // apply gravity acceleration to vertical speed:
+        vSpeed -= gravity * Time.deltaTime;
+        // terminal velocity due to air resistance
+        Mathf.Clamp(vSpeed, -terminalVel * Time.deltaTime, terminalVel * Time.deltaTime);
+        controller.Move(new Vector3(0, vSpeed, 0) * Time.deltaTime);
 
     }
 }
