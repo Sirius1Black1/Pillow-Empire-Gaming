@@ -70,7 +70,6 @@ public class ThirdPersonMovement : MonoBehaviour
         if (Input.GetKey(KeyCode.Space) && Grounded)
         {
             vectorSpeed = vectorSpeed + (Quaternion.Euler(0f, angle, 0f) * jumpVector);
-            Debug.Log("is grounded 2");
         }
 
         // apply gravity acceleration to vertical speed:
