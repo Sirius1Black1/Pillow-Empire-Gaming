@@ -19,9 +19,10 @@ public class ThirdPersonMovement : MonoBehaviour
     float turnSmoothVelocity;
     public float terminalVel = 100; //max velocity due to some kind of drag (e.g. air drag etc)
     
-    [Header("Vector Based Gravity Settings")]
+    [Header("Vector Based System Settings")]
     public bool isLockedToRigidBodyGrav = true;
-    public Vector3 vectorGravity = new Vector3(0, 9.81f, 0);  
+    public Vector3 vectorGravity = new Vector3(0, 9.81f, 0);
+    public Vector3 jumpVector = new Vector3(0, 10, 0);
 
     [Header("Old Gravity Settings")]
     [SerializeField, Range(0f, 20f)]
@@ -30,6 +31,7 @@ public class ThirdPersonMovement : MonoBehaviour
     
     private float vSpeed = 0; // current vertical velocity
     private Vector3 vectorSpeed = Vector3.zero;
+    private bool Grounded = false;
 
 
     // Start is called before the first frame update
@@ -65,6 +67,12 @@ public class ThirdPersonMovement : MonoBehaviour
             controller.Move(moveDir.normalized * speed * Time.deltaTime * direction.magnitude);
         }
 
+        if (Input.GetKey(KeyCode.Space) && Grounded)
+        {
+            vectorSpeed = vectorSpeed + (Quaternion.Euler(0f, angle, 0f) * jumpVector);
+            Debug.Log("is grounded 2");
+        }
+
         // apply gravity acceleration to vertical speed:
                 
         //Vector Gravity
@@ -83,7 +91,11 @@ public class ThirdPersonMovement : MonoBehaviour
         {
             // grounded character has vSpeed = 0
             vectorSpeed = Physics.gravity.normalized * 0.1f;
-        } 
+            //TODO: not such a nice solution, but better just validated once then more often
+            Grounded = true;
+        }
+        else
+            Grounded = false;
 
         /*
         //gravity
