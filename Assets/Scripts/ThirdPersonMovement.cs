@@ -54,11 +54,11 @@ public class ThirdPersonMovement : MonoBehaviour
         //Vector along wich to move
         Vector3 moveDir = Quaternion.Euler(0f, targetAngle, 0f) * Vector3.forward;
         //Movement mode handling
-        if (Input.GetKey(KeyCode.LeftShift))
+        if (Input.GetButton("Run"))
         {
             controller.Move(moveDir.normalized * runSpeed * Time.deltaTime * direction.magnitude);
         }
-        else if (Input.GetKey(KeyCode.LeftControl))
+        else if (Input.GetButton("Sneak"))
         {
             controller.Move(moveDir.normalized * sneakSpeed * Time.deltaTime * direction.magnitude);
         }
@@ -67,7 +67,8 @@ public class ThirdPersonMovement : MonoBehaviour
             controller.Move(moveDir.normalized * speed * Time.deltaTime * direction.magnitude);
         }
 
-        if (Input.GetKey(KeyCode.Space) && Grounded)
+        //Jumping
+        if (Input.GetButton("Jump") && Grounded)
         {
             vectorSpeed = vectorSpeed + (Quaternion.Euler(0f, angle, 0f) * jumpVector);
         }
