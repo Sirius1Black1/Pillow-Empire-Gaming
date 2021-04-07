@@ -11,17 +11,26 @@ public class ThirdPersonMovement : MonoBehaviour
 
     public Transform cam;
 
+    [Header("Speeds")]
     public float speed = 5f;
     public float runSpeed = 8f;
     public float sneakSpeed = 3f;
-
     public float turnSpeed = 0.2f;
     float turnSmoothVelocity;
+    public float terminalVel = 100; //max velocity due to some kind of drag (e.g. air drag etc)
+    
+    [Header("Vector Based Gravity Settings")]
+    public bool isLockedToRigidBodyGrav = true;
+    public Vector3 vectorGravity = new Vector3(0, 9.81f, 0);  
 
+    [Header("Old Gravity Settings")]
     [SerializeField, Range(0f, 20f)]
     public float gravity = 9.81f;
+
+    
     private float vSpeed = 0; // current vertical velocity
-    public float terminalVel = 100;
+    private Vector3 vectorSpeed = Vector3.zero;
+
 
     // Start is called before the first frame update
     void Start()
@@ -56,17 +65,38 @@ public class ThirdPersonMovement : MonoBehaviour
             controller.Move(moveDir.normalized * speed * Time.deltaTime * direction.magnitude);
         }
 
-        //gravity
+        // apply gravity acceleration to vertical speed:
+                
+        //Vector Gravity
+        if (isLockedToRigidBodyGrav)
+            vectorSpeed += Physics.gravity * Time.deltaTime;
+        else
+            vectorSpeed += vectorGravity * Time.deltaTime;
+
+        // terminal velocity due to air resistance
+        vectorSpeed = Vector3.ClampMagnitude(vectorSpeed, terminalVel);
+
+        controller.Move(vectorSpeed * Time.deltaTime);
+
+        //always after applying speed
         if (controller.isGrounded)
         {
             // grounded character has vSpeed = 0
-            vSpeed = 0; 
-        }
-        // apply gravity acceleration to vertical speed:
+            vectorSpeed = Physics.gravity.normalized * 0.1f;
+        } 
+
+        /*
+        //gravity
         vSpeed -= gravity * Time.deltaTime;
         // terminal velocity due to air resistance
-        Mathf.Clamp(vSpeed, -terminalVel * Time.deltaTime, terminalVel * Time.deltaTime);
+        vSpeed = Mathf.Clamp(vSpeed, -terminalVel, terminalVel);
         controller.Move(new Vector3(0, vSpeed, 0) * Time.deltaTime);
-
+        //groundcheck always needs to come right after controller.Move
+        if (controller.isGrounded)
+        {
+            // grounded character has vSpeed = 0 
+            //sollte nicht null sein da sonst der is Grounded state nicht stabil ist 
+            vSpeed = -0.1f;
+        }*/
     }
 }
