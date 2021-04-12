@@ -7,8 +7,8 @@ public class ThirdPersonCameraAdditions : MonoBehaviour
     public Cinemachine.CinemachineFreeLook mainCamera;
 
     [SerializeField, Range(0.1f,0.9f)]
-    public float scrollSensititvity = 0.5f;
-    
+    public float scrollSensititvity = 0.5f;    
+
     public float minDistance = 1f;
     public float maxDistance = 20f;
 
