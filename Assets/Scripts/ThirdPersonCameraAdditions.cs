@@ -29,6 +29,11 @@ public class ThirdPersonCameraAdditions : MonoBehaviour
             mainCamera = (Cinemachine.CinemachineFreeLook)FindObjectOfType(typeof(Cinemachine.CinemachineFreeLook));
         }
         fov = mainCamera.m_Lens.FieldOfView;
+        float test = 100;
+        Mathf.Clamp(test, 1, 20);
+
+        Debug.Log($"{test}");
+        Debug.Log($"{Mathf.Clamp(test, 1, 20)}");
 
     }
 
@@ -60,18 +65,29 @@ public class ThirdPersonCameraAdditions : MonoBehaviour
         
         if (Input.GetButton("Run") && (xPos != transform.position.x || yPos != transform.position.y))
         {
-            mainCamera.m_Lens.FieldOfView = Mathf.Clamp( tempfov += fovChangeSpeed * Time.deltaTime , fov , fov + runFovChange );
+            tempfov = Mathf.Clamp( tempfov += fovChangeSpeed * Time.deltaTime , fov , fov + runFovChange );
         }
         else if (Input.GetButton("Sneak") && (xPos != transform.position.x || yPos != transform.position.y))
         {
-            mainCamera.m_Lens.FieldOfView = Mathf.Clamp( tempfov -= fovChangeSpeed * Time.deltaTime , fov - sneakFovChange , fov );
+            tempfov = Mathf.Clamp( tempfov -= fovChangeSpeed * Time.deltaTime , fov - sneakFovChange , fov );
         }
         else
         {
-            //TODO implement proper gradual return to nominal state
-            mainCamera.m_Lens.FieldOfView = fov;
-            tempfov = fov;
+            //Clamping so tempfov will reach FOV after no input is given
+            if (tempfov < fov)
+            {
+                tempfov = Mathf.Clamp(tempfov += fovChangeSpeed * Time.deltaTime, Mathf.NegativeInfinity, fov);
+            }
+            else if (tempfov > fov)
+            {
+                tempfov = Mathf.Clamp(tempfov -= fovChangeSpeed * Time.deltaTime, fov, Mathf.Infinity);
+            }
         }
+
+        mainCamera.m_Lens.FieldOfView = tempfov;
+
+
+
         //remember position to detect movement
         xPos = transform.position.x;
         yPos = transform.position.y;
