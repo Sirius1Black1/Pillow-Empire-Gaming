@@ -33,6 +33,8 @@ public class ThirdPersonMovement : MonoBehaviour
     {
         //Since the Controller is a Component that is on the Player I would make it a required component -> less room for error
         controller = GetComponent<CharacterController>();
+        //set cam reference
+        cam = GameObject.Find("Main Camera").transform;
     }
 
     // Update is called once per frame
