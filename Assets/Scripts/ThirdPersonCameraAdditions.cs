@@ -31,10 +31,6 @@ public class ThirdPersonCameraAdditions : MonoBehaviour
         fov = mainCamera.m_Lens.FieldOfView;
         float test = 100;
         Mathf.Clamp(test, 1, 20);
-
-        Debug.Log($"{test}");
-        Debug.Log($"{Mathf.Clamp(test, 1, 20)}");
-
     }
 
     
