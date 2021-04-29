@@ -1,9 +1,11 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using MLAPI;
+using MLAPI.Messaging;
 
 [RequireComponent(typeof(CharacterController))]
-public class ThirdPersonMovement : MonoBehaviour
+public class ThirdPersonMovement : NetworkBehaviour
 //Code based on Brackeys (https://www.youtube.com/watch?v=4HpC--2iowE) 
 {
 
@@ -53,6 +55,10 @@ public class ThirdPersonMovement : MonoBehaviour
         //Vector along wich to move
         Vector3 moveDir = Quaternion.Euler(0f, targetAngle, 0f) * Vector3.forward;
 
+        //skip execution on wrong clients
+        if (!IsOwner) return;  
+        
+
         //Movement mode handling
         if (Input.GetButton("Run"))
         {
@@ -72,10 +78,10 @@ public class ThirdPersonMovement : MonoBehaviour
         {
             vectorSpeed = vectorSpeed + (Quaternion.Euler(0f, angle, 0f) * jumpVector);
         }
+        
 
         // apply gravity acceleration to vertical speed:
-                
-        //Vector Gravity
+          
         if (isLockedToRigidBodyGrav)
         {
             vectorSpeed += Physics.gravity * Time.deltaTime;

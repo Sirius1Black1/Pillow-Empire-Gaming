@@ -3123,9 +3123,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1efe450d56d9a5c45b44d76673eca735, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  serverPosition:
-    m_InternalValue: {x: 0, y: 0, z: 0}
-  cam: {fileID: 0}
+  camaraPrefab: {fileID: 5289995137198145159, guid: 75e350642b49b914080bc71e3be46ea7,
+    type: 3}
   speed: 5
   runSpeed: 8
   sneakSpeed: 3
