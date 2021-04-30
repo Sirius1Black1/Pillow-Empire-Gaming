@@ -1,9 +1,12 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 public class ThirdPersonCameraAdditions : MonoBehaviour
 {
+    private InputActions inputs = null;
+
     public Cinemachine.CinemachineFreeLook mainCamera;
 
     [SerializeField, Range(0.1f,0.9f)]
@@ -21,6 +24,22 @@ public class ThirdPersonCameraAdditions : MonoBehaviour
 
     private float fov;
 
+    private void Awake()
+    {
+        inputs = new InputActions();
+    }
+
+    private void OnEnable()
+    {
+        inputs.Player.Enable();
+    }
+
+    private void OnDisable()
+    {
+        inputs.Player.Disable();
+    }
+
+
     // Start is called before the first frame update
     void Start()
     {
@@ -34,15 +53,17 @@ public class ThirdPersonCameraAdditions : MonoBehaviour
     }
 
     
+    
     private float xPos;
     private float yPos;
     private float tempfov;
     // Update is called once per frame
     void Update()
-    {
+    { 
+        
+        //Camera zoom handling'        
+        var zoomInput = -inputs.Player.Zoom.ReadValue<float>(); 
 
-        //Camera zoom handling
-        var zoomInput = -Input.mouseScrollDelta.y;
         if (zoomInput > 0 && mainCamera.m_Orbits[2].m_Radius < maxDistance)
         {
             mainCamera.m_Orbits[0].m_Radius += scrollSensititvity;
@@ -58,12 +79,13 @@ public class ThirdPersonCameraAdditions : MonoBehaviour
 
 
         //change pov only when running/sneaking and moving
-        
-        if (Input.GetButton("Run") && (xPos != transform.position.x || yPos != transform.position.y))
+       
+        //TODO: get new system to work
+        if (inputs.Player.Run.ReadValue<float>() > 0 && (xPos != transform.position.x || yPos != transform.position.y))
         {
             tempfov = Mathf.Clamp( tempfov += fovChangeSpeed * Time.deltaTime , fov , fov + runFovChange );
         }
-        else if (Input.GetButton("Sneak") && (xPos != transform.position.x || yPos != transform.position.y))
+        else if (inputs.Player.Sneak.ReadValue<float>() > 0 && (xPos != transform.position.x || yPos != transform.position.y))
         {
             tempfov = Mathf.Clamp( tempfov -= fovChangeSpeed * Time.deltaTime , fov - sneakFovChange , fov );
         }

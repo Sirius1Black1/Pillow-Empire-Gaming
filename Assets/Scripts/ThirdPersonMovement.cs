@@ -8,9 +8,8 @@ using MLAPI.Messaging;
 public class ThirdPersonMovement : NetworkBehaviour
 //Code based on Brackeys (https://www.youtube.com/watch?v=4HpC--2iowE) 
 {
-
+    private InputActions inputs = null;
     private CharacterController controller;
-
     public Transform cam;
 
     [Header("Speeds")]
@@ -29,6 +28,20 @@ public class ThirdPersonMovement : NetworkBehaviour
     private Vector3 vectorSpeed = Vector3.zero;
     private bool Grounded = false;
 
+    private void Awake()
+    {
+        inputs = new InputActions();
+    }
+
+    private void OnEnable()
+    {
+        inputs.Player.Enable();
+    }
+
+    private void OnDisable()
+    {
+        inputs.Player.Disable();
+    }
 
     // Start is called before the first frame update
     void Start()
@@ -42,8 +55,11 @@ public class ThirdPersonMovement : NetworkBehaviour
     // Update is called once per frame
     void Update()
     {
+
+        var movementvector = inputs.Player.Move.ReadValue<Vector2>();
+
         //get input direction
-        Vector3 direction = new Vector3(Input.GetAxisRaw("Horizontal"), 0f, Input.GetAxisRaw("Vertical")).normalized;
+        Vector3 direction = new Vector3(movementvector.x, 0f, movementvector.y).normalized;
 
         //smooth rotation
         float targetAngle = Mathf.Atan2(direction.x,direction.z) * Mathf.Rad2Deg + cam.eulerAngles.y;
@@ -60,11 +76,11 @@ public class ThirdPersonMovement : NetworkBehaviour
         
 
         //Movement mode handling
-        if (Input.GetButton("Run"))
+        if (inputs.Player.Run.ReadValue<float>() > 0)
         {
             controller.Move(moveDir.normalized * runSpeed * Time.deltaTime * direction.magnitude);
         }
-        else if (Input.GetButton("Sneak"))
+        else if (inputs.Player.Sneak.ReadValue<float>() > 0)
         {
             controller.Move(moveDir.normalized * sneakSpeed * Time.deltaTime * direction.magnitude);
         }
@@ -74,9 +90,9 @@ public class ThirdPersonMovement : NetworkBehaviour
         }
 
         //Jumping
-        if (Input.GetButton("Jump") && Grounded)
+        if (inputs.Player.Jump.ReadValue<float>() > 0 && Grounded)
         {
-            vectorSpeed = vectorSpeed + (Quaternion.Euler(0f, angle, 0f) * jumpVector);
+            vectorSpeed += Quaternion.Euler(0f, angle, 0f) * jumpVector;
         }
         
 
