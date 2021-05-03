@@ -10,7 +10,7 @@ public class ThirdPersonCameraAdditions : MonoBehaviour
     public Cinemachine.CinemachineFreeLook mainCamera;
 
     [SerializeField, Range(0.1f,0.9f)]
-    public float scrollSensititvity = 0.5f;    
+    public float scrollSensititvity = 0.5f;
 
     public float minDistance = 1f;
     public float maxDistance = 20f;
@@ -47,7 +47,9 @@ public class ThirdPersonCameraAdditions : MonoBehaviour
         {
             mainCamera = (Cinemachine.CinemachineFreeLook)FindObjectOfType(typeof(Cinemachine.CinemachineFreeLook));
         }
+        
         fov = mainCamera.m_Lens.FieldOfView;
+        //FIXME: test doesn't do anything as of now
         float test = 100;
         Mathf.Clamp(test, 1, 20);
     }
@@ -80,7 +82,6 @@ public class ThirdPersonCameraAdditions : MonoBehaviour
 
         //change pov only when running/sneaking and moving
        
-        //TODO: get new system to work
         if (inputs.Player.Run.ReadValue<float>() > 0 && (xPos != transform.position.x || yPos != transform.position.y))
         {
             tempfov = Mathf.Clamp( tempfov += fovChangeSpeed * Time.deltaTime , fov , fov + runFovChange );

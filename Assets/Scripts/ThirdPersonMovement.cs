@@ -55,7 +55,6 @@ public class ThirdPersonMovement : NetworkBehaviour
     // Update is called once per frame
     void Update()
     {
-
         var movementvector = inputs.Player.Move.ReadValue<Vector2>();
 
         //get input direction
